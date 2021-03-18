@@ -30,18 +30,20 @@ the attributes available in the original Brian2 classes.
 TODO Start
 """
 # Define learning rule
+# Readme
 # Create pip package
 # Parameter check: warning instead of exception?
 # Parameter names according to NxSDK? Pro: consistency, Con: Nobody knows the NxSDK docs
 # setter and getter for parameters using python properties? (see https://www.python-kurs.eu/python3_properties.php)
+# Create documenation?
 """
 TODO End
 """
 
 # Import all necessary modules
-from .constants import state, synapse_sign_mode
-from .loihi_network import LoihiNetwork
-from .loihi_neuron_group import LoihiNeuronGroup
-from .loihi_synapses import LoihiSynapses
-from .loihi_state_monitor import LoihiStateMonitor
-from .loihi_spike_generator_group import LoihiSpikeGeneratorGroup
+from .lib.constants import state, synapse_sign_mode
+from .lib.loihi_network import LoihiNetwork
+from .lib.loihi_neuron_group import LoihiNeuronGroup
+from .lib.loihi_synapses import LoihiSynapses
+from .lib.loihi_state_monitor import LoihiStateMonitor
+from .lib.loihi_spike_generator_group import LoihiSpikeGeneratorGroup

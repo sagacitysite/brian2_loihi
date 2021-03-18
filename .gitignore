@@ -1,4 +1,10 @@
-# Byte-compiled / optimized / DLL files
+# Byte-compiled, optimized, DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Build process
+*.egg-info
+build/
+dist/
+setup.py

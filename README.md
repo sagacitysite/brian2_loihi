@@ -7,7 +7,7 @@ Further details are explained in a paper coming soon.
 ## Installation
 
 ```
-pip install brian2_loihi
+pip install brian2-loihi
 ```
 
 ## Usage

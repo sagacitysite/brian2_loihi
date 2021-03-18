@@ -20,11 +20,11 @@ Five *Brian2* classes are extended. Available parameters are reported below. Fur
 * Don't change the `defaultclock.dt` value. It is set to match *Loihi*.
 * Don't reorder the network simulation `schedule`.
 
-#### LoihiNetwork
+### LoihiNetwork
 
 Extends the `Network` class from *Brian2* and supports the same parameters.
 
-#### LoihiNeuronGroup
+### LoihiNeuronGroup
 
 Extends the `NeuronGroup` class from *Brian2* and supports the following parameters:
 
@@ -34,7 +34,7 @@ Extends the `NeuronGroup` class from *Brian2* and supports the following paramet
 * **decay_v** (int, 0...4096, optional): The membrane voltage decay (note that tau_v = 4096/decay_v)
 * **decay_I** (int, 0...4096, optional): The current decay (note that tau_I = 4096/decay_I)
 
-#### LoihiSynapses
+### LoihiSynapses
 
 Extends the `Synapses` class from *Brian2* and supports the following parameters:
 
@@ -56,7 +56,7 @@ Extends the `Synapses` class from *Brian2* and supports the following parameters
 * **imp_y3** (int, optional): The impulse of the first synaptic post trace y3.
 * **tau_y3** (int, optional): The time constant of the first synaptic pre trace y3.
 
-#### LoihiStateMonitor
+### LoihiStateMonitor
 
 Extends the `StateMonitor` class from *Brian2* and supports the following parameters:
 
@@ -65,7 +65,7 @@ Extends the `StateMonitor` class from *Brian2* and supports the following parame
 * **record** (bool, sequence of ints): Which indices to record, nothing is recorded for ``False``, everything is recorded for ``True`` (warning: may use a great deal of memory), or a specified subset of indices.
 * **order** (int, optional): The priority of of this group for operations occurring at the same time step and in the same scheduling slot. Defaults to 0.
 
-#### LoihiSpikeGeneratorGroup
+### LoihiSpikeGeneratorGroup
 
 Extends the `SpikeGeneratorGroup` class from *Brian2* and supports the following parameters:
 

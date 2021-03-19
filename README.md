@@ -69,7 +69,7 @@ Extends the `Synapses` class from *Brian2* and supports the following parameters
 Extends the `StateMonitor` class from *Brian2* and supports the following parameters:
 
 * **source** (`Group`): Which object to record values from.
-* **variables** (str): Which variables to record, check the `state` object for details.
+* **variable** (str): Which variables to record, check the `state` object for details.
 * **record** (bool, sequence of ints): Which indices to record, nothing is recorded for ``False``, everything is recorded for ``True`` (warning: may use a great deal of memory), or a specified subset of indices.
 * **order** (int, optional): The priority of of this group for operations occurring at the same time step and in the same scheduling slot. Defaults to 0.
 

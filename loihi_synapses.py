@@ -353,7 +353,7 @@ class LoihiSynapses(Synapses):
         # Define weight equations
         #synaptic_input_update = '''I += w\n'''
         synaptic_input_update = '''I += w_act\n'''
-        learning_rule = self.__buildLearningRule(dw)
+        learning_rule = self.__buildLearningRule(dw) if dw != '' else ''
 
         # Define trace equations
         x1_model, x1_pre = self.__defineTraceEquation('x1', imp_x1, tau_x1)

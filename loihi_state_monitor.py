@@ -26,8 +26,8 @@ class LoihiStateMonitor(StateMonitor):
         ----------
         source : `Group`
             Which object to record values from.
-        variables : str
-            Which variables to record, check the `state` object for details.
+        variable : str
+            Which variable to record, check the `state` object for details.
         record : bool, sequence of ints
             Which indices to record, nothing is recorded for ``False``,
             everything is recorded for ``True`` (warning: may use a great deal of

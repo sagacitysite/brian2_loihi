@@ -20,6 +20,14 @@ Five *Brian2* classes are extended. Available parameters are reported below. Fur
 * Don't change the `defaultclock.dt` value. It is set to match *Loihi*.
 * Don't reorder the network simulation `schedule`.
 
+First import the package as:
+
+```
+from brian2_loihi import *
+```
+
+The following classes can be used:
+
 ### LoihiNetwork
 
 Extends the `Network` class from *Brian2* and supports the same parameters.

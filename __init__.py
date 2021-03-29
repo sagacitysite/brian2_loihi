@@ -29,7 +29,7 @@ the attributes available in the original Brian2 classes.
 """
 TODO Start
 """
-# Create pip package
+# print(LoihiSynapses), print(LoihiNeuronGroup)
 # Parameter check: warning instead of exception?
 # Parameter names according to NxSDK? Pro: consistency, Con: Nobody knows the NxSDK docs
 # setter and getter for parameters using python properties? (see https://www.python-kurs.eu/python3_properties.php)
@@ -39,9 +39,16 @@ TODO End
 """
 
 # Import all necessary modules
-from brian2_loihi.constants import state, synapse_sign_mode
-from brian2_loihi.loihi_network import LoihiNetwork
-from brian2_loihi.loihi_neuron_group import LoihiNeuronGroup
-from brian2_loihi.loihi_synapses import LoihiSynapses
-from brian2_loihi.loihi_state_monitor import LoihiStateMonitor
-from brian2_loihi.loihi_spike_generator_group import LoihiSpikeGeneratorGroup
+#from brian2_loihi.constants import state, synapse_sign_mode
+#from brian2_loihi.loihi_network import LoihiNetwork
+#from brian2_loihi.loihi_neuron_group import LoihiNeuronGroup
+#from brian2_loihi.loihi_synapses import LoihiSynapses
+#from brian2_loihi.loihi_state_monitor import LoihiStateMonitor
+#from brian2_loihi.loihi_spike_generator_group import LoihiSpikeGeneratorGroup
+
+from .constants import state, synapse_sign_mode
+from .loihi_network import LoihiNetwork
+from .loihi_neuron_group import LoihiNeuronGroup
+from .loihi_synapses import LoihiSynapses
+from .loihi_state_monitor import LoihiStateMonitor
+from .loihi_spike_generator_group import LoihiSpikeGeneratorGroup

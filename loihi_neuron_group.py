@@ -57,6 +57,18 @@ class LoihiNeuronGroup(NeuronGroup):
             'v_th': threshold_v_mant * 2**6
         }
 
+        # Define parameters for printing
+        self.loihi_parameters = {
+            **p,
+            'decay_v': decay_v,
+            'decay_I': decay_I,
+            'tau_v': 2**12/decay_v,
+            'tau_I': 2**12/decay_I,
+            'refractory': refractory,
+            'threshold_v_mant': threshold_v_mant,
+            'reset_v': 0
+        }
+
         # Neuron model
         equations_LIF = '''
             rnd_v = sign(v)*ceil(abs(v*{1_tau_v})) : 1
@@ -78,3 +90,14 @@ class LoihiNeuronGroup(NeuronGroup):
 
         # Set initial voltage
         self.v = 0
+
+    def __str__(self):
+        """Creates a user friendly overview over all parameters
+
+        This function makes it easy to get a transparent overview over all neuron group parameters.
+        """
+        print_string = 'Parameters of the neuron group:\n\n'
+        for key, value in self.loihi_parameters.items():
+            print_string += '{:18} {:}\n'.format(key, value)
+
+        return print_string

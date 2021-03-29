@@ -9,7 +9,8 @@ state = SimpleNamespace(**{
     'Y1TRACE': 'y1',
     'Y2TRACE': 'y2',
     'Y3TRACE': 'y3',
-    'WEIGHT': 'w'
+    'WEIGHT': 'w',
+    'ACTUAL_WEIGHT': 'w_act'
 })
 
 # Synapse sign mode

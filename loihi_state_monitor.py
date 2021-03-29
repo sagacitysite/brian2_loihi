@@ -50,3 +50,9 @@ class LoihiStateMonitor(StateMonitor):
             self.when = 'end'
         if (variable in ['I', 'x1', 'x2', 'y1', 'y2', 'y3', 'w']):
             self.when = 'synapses'
+    #@property
+    #def t(self):
+        """
+        Returns t as ints without ms
+        """
+    #    return self._t/ms

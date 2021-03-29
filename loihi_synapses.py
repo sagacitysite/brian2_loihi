@@ -50,7 +50,7 @@ class LoihiSynapses(Synapses):
     def w_act(self, value):
         """
         """
-        self.__w_act = value
+        self._w_act = value
 
     @property
     def w(self):
@@ -60,7 +60,7 @@ class LoihiSynapses(Synapses):
         int/list
             A single integer value or a list of weights
         """
-        return self.__w
+        return self._w
 
     @w.setter
     def w(self, weights):
@@ -109,7 +109,10 @@ class LoihiSynapses(Synapses):
         self.w_act = self.calcActualWeights(weights)
 
         # Store weights
-        self.__w = weights
+        self._w = weights
+
+        # Not only set the attribute, but also the state variable for the equations
+        self.set_states({'w': weights, 'w_act': self.calcActualWeights(weights)})
 
     def __init__(
             self, source, target=None, delay=0, dw='', w_exp=0,
@@ -241,7 +244,7 @@ class LoihiSynapses(Synapses):
         #print(on_post)
 
         # Create Brian synapses
-        super().__init__(
+        super(LoihiSynapses, self).__init__(
             source,
             target,
             model=model,

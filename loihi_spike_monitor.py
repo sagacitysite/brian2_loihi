@@ -24,7 +24,8 @@ class LoihiSpikeMonitor(SpikeMonitor):
         source : `Group`
             Which object to record values from.
         variable : str
-            Which variable to record, check the `state` object for details.
+            Which variables to record at the time of the spike (in addition to the index of the neuron).
+            Can be the name of a variable or a list of names
         order : int, optional
             The priority of of this group for operations occurring at the same time
             step and in the same scheduling slot. Defaults to 0.

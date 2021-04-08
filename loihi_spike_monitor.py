@@ -14,7 +14,7 @@ class LoihiSpikeMonitor(SpikeMonitor):
         Initializes the LoihiSpikeMonitor and the SpikeMonitor
     """
 
-    def __init__(self, source, variable=None, order=None):
+    def __init__(self, source, variable=None, record=True, order=None):
         """ Initializes the LoihiSpikeMonitor and the SpikeMonitor
 
         First, a SpikeMonitor is initialized, based on the given parameters.
@@ -26,6 +26,10 @@ class LoihiSpikeMonitor(SpikeMonitor):
         variable : str
             Which variables to record at the time of the spike (in addition to the index of the neuron).
             Can be the name of a variable or a list of names
+        record : bool, sequence of ints
+            Which indices to record, nothing is recorded for ``False``,
+            everything is recorded for ``True`` (warning: may use a great deal of
+            memory), or a specified subset of indices.
         order : int, optional
             The priority of of this group for operations occurring at the same time
             step and in the same scheduling slot. Defaults to 0.
@@ -35,6 +39,7 @@ class LoihiSpikeMonitor(SpikeMonitor):
         super().__init__(
             source,
             variable,
+            record=record,
             order=order
         )
 

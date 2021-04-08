@@ -20,6 +20,7 @@ The module mainly extends Brian2 classes:
 * The LoihiNeuronGroup extends the Brian2 NeuronGroup class
 * The LoihiSynapses extends the Brian2 Synapses class
 * The LoihiStateMonitor extends the Brian2 StateMonitor class
+* The LoihiSpikeMonitor extends the Brian2 SpikeMonitor class
 * The LoihiSpikeGeneratorGroup extends the Brian2 SpikeGeneratorGroup class
 
 Note that the attributes of the extended classes deviate in most cases from
@@ -51,4 +52,5 @@ from .loihi_network import LoihiNetwork
 from .loihi_neuron_group import LoihiNeuronGroup
 from .loihi_synapses import LoihiSynapses
 from .loihi_state_monitor import LoihiStateMonitor
+from .loihi_spike_monitor import LoihiSpikeMonitor
 from .loihi_spike_generator_group import LoihiSpikeGeneratorGroup

@@ -202,9 +202,6 @@ class LoihiSynapses(Synapses):
         y2_model, y2_post = self.__defineTraceEquation('y2', imp_y2, tau_y2)
         y3_model, y3_post = self.__defineTraceEquation('y3', imp_y3, tau_y3)
 
-        # Initialize actual weight
-        #self.w_act = None
-
         # Define parameters for printing
         self.loihi_parameters = {
             'delay': delay,
@@ -444,6 +441,9 @@ class LoihiSynapses(Synapses):
             dx0/dt = 0 / ms : 1 (clock-driven)
             dy0/dt = 0 / ms : 1 (clock-driven)
         '''.format(**p)
+
+        # Replace ^ by ** since python/sympy needs ** as potential symbol, but ^ is the Loihi way doing it
+        learning_equations = learning_equations.replace('^', '**')
 
         # Remove preceding spaces and tabs and return
         return re.sub('(?<=\\n)[ \t]*', '', learning_equations)

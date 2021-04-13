@@ -37,6 +37,10 @@ class LoihiStateMonitor(StateMonitor):
             step and in the same scheduling slot. Defaults to 0.
         """
 
+        # Check if only one varibable is given
+        if isinstance(variable, list):
+            raise Exception('In the Loihi emulator, you can only define one varible in every state monitor. If you need to probe more variables, create another state monitor.')
+
         # Define Brian state monitor
         super().__init__(
             source,
@@ -46,9 +50,10 @@ class LoihiStateMonitor(StateMonitor):
         )
 
         # Update when states should be monitored
-        if (variable in ['v']):
+        if (variable in ['v', 'w', 'w_act']):
             self.when = 'end'
-        if (variable in ['I', 'x1', 'x2', 'y1', 'y2', 'y3', 'w']):
+        #if (variable in ['I', 'x1', 'x2', 'y1', 'y2', 'y3', 'w', 'w_act']):
+        if (variable in ['I', 'x1', 'x2', 'y1', 'y2', 'y3']):
             self.when = 'synapses'
     #@property
     #def t(self):

@@ -231,14 +231,8 @@ class LoihiSynapses(Synapses):
 
         # Combine equations
         model = x1_model + x2_model + y1_model + y2_model + y3_model + learning_rule
-        #print('Synaptic model:')
-        #print(model)
         on_pre = synaptic_input_update + x0_factor + x1_pre + x2_pre
-        #print('on_pre:')
-        #print(on_pre)
         on_post = y0_factor + y1_post + y2_post + y3_post
-        #print('on_post')
-        #print(on_post)
 
         # Create Brian synapses
         super(LoihiSynapses, self).__init__(
@@ -310,12 +304,28 @@ class LoihiSynapses(Synapses):
             check_range_and_int(imp, 'imp_'+name, low=0, high=127)
             # Check if tau value is in a range of 0...127 and integer
             check_lower_and_int(tau, 'tau_'+name, low=0)
-
+            
+            # backup
+            #model = '''
+            #    {v}_new = {v} * exp(-1.0/{tau}) : 1
+            #    {v}_int = int({v}_new) : 1
+            #    {v}_frac = {v}_new - {v}_int : 1
+            #    {v}_add_or_not = int({v}_frac > rand()) : 1 (constant over dt)
+            #    {v}_rnd = {v}_int + {v}_add_or_not : 1
+            #    d{v}/dt = {v}_rnd / ms : 1 (clock-driven)
+            #'''.format(**p)
+            
+            
+            # {v}_new = {v} * exp(-1.0/{tau}) : 1
+            # x = 1.0/{tau}
+            # {v}_new = {v} * (1-​x+​x^​2/​2!-​x^​3/​3!) : 1
+            # third order
+            # {v}_new = {v} * exp(-1.0/{tau}): 1
             model = '''
-                {v}_new = {v} * exp(-1.0/{tau}) : 1
+                {v}_new = {v} * (1 - (1.0/{tau}) + (1.0/{tau})**2 / 2 - (1.0/{tau})**3 / 6) : 1
                 {v}_int = int({v}_new) : 1
                 {v}_frac = {v}_new - {v}_int : 1
-                {v}_add_or_not = int({v}_frac > rand()) : 1 (constant over dt)
+                {v}_add_or_not = int({v}_new!={v}_int and 0.5 > rand()) : 1 (constant over dt)
                 {v}_rnd = {v}_int + {v}_add_or_not : 1
                 d{v}/dt = {v}_rnd / ms : 1 (clock-driven)
             '''.format(**p)
@@ -405,16 +415,34 @@ class LoihiSynapses(Synapses):
         # Find terms in the equations and check if every term has an event variable (so called dependency factor)
         match = re.sub('(?<=\([^)])([+-])(?=.*?\))|(?<=2\^)(\+*?)(?=[0-9])|(?<=2\^)(\-*?)(?=[0-7])', '*', dw)
         for m in re.split('[\+-]', match):
-            if (re.search('(x0|y0|u[0-9]+)', m) is None):
+            if (re.search('(x0|y0|u[0-9]+)', m) is None and m != ''):
                 raise Exception("There is at least one term in the equation that does not contain a dependency factor (x0, y0 or u[0-9]).")
+
+        # Get limits for weight mantissa, depending on sign mode of weight
+        # Default to mixed sign mode
+        w_low = -256
+        w_high = 254
+        # Adapt if excitatory
+        if (self.sign_mode == synapse_sign_mode.EXCITATORY):
+            w_low = 0
+            w_high = 255
+        # Adapt if inhibitory
+        if (self.sign_mode == synapse_sign_mode.INHIBITORY):
+            w_low = -256
+            w_high = 0
 
         # Define variables for equation
         p = {
             'dw': dw,
             'nb': self.__getNumWeightBits(),
+            'is_mixed': int(self.sign_mode == synapse_sign_mode.MIXED),
             'w_exp': self.w_exp,
-            'limit': self.__getWeightLimit()
+            'limit': self.__getWeightLimit(),
+            'w_low': w_low,
+            'w_high': w_high
         }
+
+        #add_or_not = int(abs(w_updated/2 - int(w_updated/2)) >= 0.5) : 1
 
         # Build learning rule equations
         learning_equations = '''
@@ -430,13 +458,15 @@ class LoihiSynapses(Synapses):
             u9 = int(t/ms % 2**9 == 0) : 1
 
             w_updated = w + {dw} : 1
-            dw/dt = w_updated / ms : 1 (clock-driven)
+            add_or_not = sign(w_updated)*{is_mixed}*(rand() > 0.5) : 1 (constant over dt)
+            w_shifted = int((w_updated + add_or_not) / 2**{nb}) * 2**{nb} : 1
+            w_clipped = clip(w_shifted, {w_low}, {w_high}) : 1
+            dw/dt = w_clipped / ms : 1 (clock-driven)
 
-            w_shifted = int(w_updated / 2**{nb}) * 2**{nb} : 1
-            w_scaled = w_shifted * 2**(6 + {w_exp}) : 1
-            w_scaled_shifted = int(floor(w_scaled / 2**6)) * 2**6 : 1
-            w_clipped = clip(w_scaled_shifted, -{limit}, {limit}) : 1
-            dw_act/dt = w_clipped / ms : 1 (clock-driven)
+            w_act_scaled = w_clipped * 2**(6 + {w_exp}) : 1
+            w_act_scaled_shifted = int(floor(w_act_scaled / 2**6)) * 2**6 : 1
+            w_act_clipped = clip(w_act_scaled_shifted, -{limit}, {limit}) : 1
+            dw_act/dt = w_act_clipped / ms : 1 (clock-driven)
 
             dx0/dt = 0 / ms : 1 (clock-driven)
             dy0/dt = 0 / ms : 1 (clock-driven)

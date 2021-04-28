@@ -14,7 +14,7 @@ class LoihiStateMonitor(StateMonitor):
         Initializes the LoihiStateMonitor and the StateMonitor
     """
 
-    def __init__(self, source, variable, record=True, order=0):
+    def __init__(self, source, variable, record=True, order=0, name='loihi_statemonitor*'):
         """ Initializes the LoihiStateMonitor and the StateMonitor
 
         First, a StateMonitor is initialized, based on the given parameters.
@@ -35,6 +35,9 @@ class LoihiStateMonitor(StateMonitor):
         order : int, optional
             The priority of of this group for operations occurring at the same time
             step and in the same scheduling slot. Defaults to 0.
+        name : str, optional
+            A unique name for the object, otherwise will use
+            ``source.name+'loihi_statemonitor_0'``, etc.
         """
 
         # Check if only one varibable is given
@@ -46,7 +49,8 @@ class LoihiStateMonitor(StateMonitor):
             source,
             variable,
             record=record,
-            order=order
+            order=order,
+            name=name
         )
 
         # Update when states should be monitored

@@ -16,7 +16,7 @@ class LoihiNeuronGroup(NeuronGroup):
         Initializes the LoihiNeuronGroup and the NeuronGroup
     """
 
-    def __init__(self, N, refractory=1, threshold_v_mant=100, decay_v=0, decay_I=4096):
+    def __init__(self, N, refractory=1, threshold_v_mant=100, decay_v=0, decay_I=4096, name='loihi_neurongroup*'):
         """ Initializes the LoihiStateMonitor and the StateMonitor
 
         The init method checks if the given parameters are valid. Afterwards the
@@ -37,6 +37,8 @@ class LoihiNeuronGroup(NeuronGroup):
             The membrane voltage decay (note that tau_v = 4096/decay_v)
         decay_I : int (0...4096), optional
             The current decay (note that tau_I = 4096/decay_I)
+        name : str, optional
+            A unique name for the group, otherwise use ``loihi_neurongroup_0``, etc.
         """
 
         # Check if tau values are in a range of 0...4096 and integer
@@ -85,7 +87,8 @@ class LoihiNeuronGroup(NeuronGroup):
             threshold='v > {v_th}'.format(**p),
             reset='v = 0',
             refractory=refractory*ms,
-            method='forward_euler'
+            method='forward_euler',
+            name=name
         )
 
         # Set initial voltage

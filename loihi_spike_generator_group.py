@@ -14,7 +14,7 @@ class LoihiSpikeGeneratorGroup(SpikeGeneratorGroup):
     __init__(N, indices, times, period=0, order=0, sorted=False)
         Initializes the LoihiSpikeGeneratorGroup and the SpikeGeneratorGroup
     """
-    def __init__(self, N, indices, times, period=0, order=0, sorted=False):
+    def __init__(self, N, indices, times, period=0, order=0, sorted=False, name='loihi_spikegeneratorgroup*'):
         """ Initializes the SpikeGeneratorGroupLoihi and the SpikeGeneratorGroup
 
         The init method adds time units to the times and period parameters.
@@ -42,6 +42,9 @@ class LoihiSpikeGeneratorGroup(SpikeGeneratorGroup):
             if your events are already sorted (first by spike time, then by index),
             this can save significant time at construction if your arrays contain
             large numbers of spikes. Defaults to ``False``.
+        name : str, optional
+            A unique name for the object, otherwise will use
+            ``loihi_spikegeneratorgroup_0'``, etc.
         """
 
         # Define Brian spike generator group
@@ -52,5 +55,6 @@ class LoihiSpikeGeneratorGroup(SpikeGeneratorGroup):
             period=period*second,
             order=order,
             sorted=sorted,
-            when = 'start'  # Update schedule
+            when='start',  # Update schedule
+            name=name
         )

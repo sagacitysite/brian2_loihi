@@ -14,7 +14,17 @@ class LoihiSpikeMonitor(SpikeMonitor):
         Initializes the LoihiSpikeMonitor and the SpikeMonitor
     """
 
-    def __init__(self, source, variable=None, record=True, order=None):
+    @property
+    def t(self):
+        """ Property decorator to inclulde a getter for the spike times
+        Returns
+        -------
+        list (int)
+            Return spike times as int
+        """
+        return (self.t_*1000).astype(int)
+
+    def __init__(self, source, variable=None, record=True, order=None, name='loihi_spikemonitor*'):
         """ Initializes the LoihiSpikeMonitor and the SpikeMonitor
 
         First, a SpikeMonitor is initialized, based on the given parameters.
@@ -23,16 +33,19 @@ class LoihiSpikeMonitor(SpikeMonitor):
         ----------
         source : `Group`
             Which object to record values from.
-        variable : str
+        variable : str, optional
             Which variables to record at the time of the spike (in addition to the index of the neuron).
             Can be the name of a variable or a list of names
-        record : bool, sequence of ints
+        record : bool, sequence of ints, optional
             Which indices to record, nothing is recorded for ``False``,
             everything is recorded for ``True`` (warning: may use a great deal of
             memory), or a specified subset of indices.
         order : int, optional
             The priority of of this group for operations occurring at the same time
             step and in the same scheduling slot. Defaults to 0.
+        name : str, optional
+            A unique name for the object, otherwise will use
+            ``source.name+'_loihi_spikemonitor_0'``, etc.
         """
 
         # Define Brian spike monitor
@@ -40,7 +53,8 @@ class LoihiSpikeMonitor(SpikeMonitor):
             source,
             variable,
             record=record,
-            order=order
+            order=order,
+            name=name
         )
 
         # Update when states should be monitored

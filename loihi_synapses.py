@@ -35,7 +35,7 @@ class LoihiSynapses(Synapses):
 
     @property
     def w_act(self):
-        """Property decorator to inclulde a getter for the actual weight w_act
+        """ Property decorator to inclulde a getter for the actual weight w_act
 
         Returns
         -------
@@ -48,13 +48,13 @@ class LoihiSynapses(Synapses):
 
     @w_act.setter
     def w_act(self, value):
-        """
+        """ Property decorator to inclulde a setter for the actual weight w_act
         """
         self._w_act = value
 
     @property
     def w(self):
-        """Property decorator to inclulde a getter for the weight mantissa w
+        """ Property decorator to inclulde a getter for the weight mantissa w
         Returns
         -------
         int/list
@@ -64,7 +64,7 @@ class LoihiSynapses(Synapses):
 
     @w.setter
     def w(self, weights):
-        """Property decorator to inclulde a setter for the weight w
+        """ Property decorator to inclulde a setter for the weight w
 
         A setter for the connection weight that takes weights and checks
         if weights match Loihi values. If not, exceptions are raised.
@@ -118,7 +118,8 @@ class LoihiSynapses(Synapses):
             self, source, target=None, delay=0, dw='', w_exp=0,
             sign_mode=2, num_weight_bits=8,
             imp_x1=False, tau_x1=False, imp_x2=False, tau_x2=False,
-            imp_y1=False, tau_y1=False, imp_y2=False, tau_y2=False, imp_y3=False, tau_y3=False
+            imp_y1=False, tau_y1=False, imp_y2=False, tau_y2=False, imp_y3=False, tau_y3=False,
+            name='loihi_synapses*'
         ):
         """ Initializes the LoihiNetwork and the Network
 
@@ -171,6 +172,9 @@ class LoihiSynapses(Synapses):
             The impulse of the first synaptic post trace y3.
         tau_y3: int, optional
             The time constant of the first synaptic pre trace y3.
+        name : str, optional
+            The name for this object. If none is given, a unique name of the form
+            ``loihi_synapses``, ``loihi_synapses_1``, etc. will be automatically chosen.
         """
 
         # Check and set synapses sign mode
@@ -242,7 +246,8 @@ class LoihiSynapses(Synapses):
             on_pre=on_pre,
             on_post=on_post,
             delay=delay*ms,
-            method='exact_synapse'
+            method='exact_synapse',
+            name=name
         )
 
     def __str__(self):

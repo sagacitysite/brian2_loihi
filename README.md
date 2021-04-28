@@ -41,6 +41,7 @@ Extends the `NeuronGroup` class from *Brian2* and supports the following paramet
 * **threshold_v_mant** (int, 0...131071, optional): The mantissa of the membrane voltage threshold.
 * **decay_v** (int, 0...4096, optional): The membrane voltage decay (note that tau_v = 4096/decay_v)
 * **decay_I** (int, 0...4096, optional): The current decay (note that tau_I = 4096/decay_I)
+* **name** (str, optional): A unique name for the group, otherwise use `loihi_neurongroup_0`, etc.
 
 ### LoihiSynapses
 
@@ -63,6 +64,7 @@ Extends the `Synapses` class from *Brian2* and supports the following parameters
 * **tau_y2** (int, optional): The time constant of the first synaptic pre trace y2.
 * **imp_y3** (int, optional): The impulse of the first synaptic post trace y3.
 * **tau_y3** (int, optional): The time constant of the first synaptic pre trace y3.
+* **name** (str, optional):  The name for this object. If none is given, a unique name of the form. `loihi_synapses`, `loihi_synapses_1`, etc. will be automatically chosen.
 
 ### LoihiStateMonitor
 
@@ -72,15 +74,17 @@ Extends the `StateMonitor` class from *Brian2* and supports the following parame
 * **variable** (str): Which variables to record, check the `state` object for details.
 * **record** (bool, sequence of ints): Which indices to record, nothing is recorded for ``False``, everything is recorded for ``True`` (warning: may use a great deal of memory), or a specified subset of indices.
 * **order** (int, optional): The priority of of this group for operations occurring at the same time step and in the same scheduling slot. Defaults to 0.
+* **name** (str, optional): A unique name for the object, otherwise will use `source.name+'loihi_statemonitor_0'`, etc.
 
 ### LoihiSpikeMonitor
 
 Extends the `SpikeMonitor` class from *Brian2* and supports the following parameters:
 
 * **source** (`Group`): Which object to record values from.
-* **variable** (str): Which variables to record at the time of the spike (in addition to the index of the neuron). Can be the name of a variable or a list of names
-* **record** (bool, sequence of ints): Which indices to record, nothing is recorded for ``False``, everything is recorded for ``True`` (warning: may use a great deal of memory), or a specified subset of indices.
+* **variable** (str, optional): Which variables to record at the time of the spike (in addition to the index of the neuron). Can be the name of a variable or a list of names
+* **record** (bool, sequence of ints, optional): Which indices to record, nothing is recorded for ``False``, everything is recorded for ``True`` (warning: may use a great deal of memory), or a specified subset of indices.
 * **order** (int, optional): The priority of of this group for operations occurring at the same time step and in the same scheduling slot. Defaults to 0.
+* **name** (str, optional): A unique name for the object, otherwise will use `source.name+'_loihi_spikemonitor_0'`, etc.
 
 ### LoihiSpikeGeneratorGroup
 
@@ -92,7 +96,80 @@ Extends the `SpikeGeneratorGroup` class from *Brian2* and supports the following
 * **period** (int, optional): If this is specified, it will repeat spikes with this period. A period of 0 means not repeating spikes.
 * **order** (int, optional): The priority of of this group for operations occurring at the same time step and in the same scheduling slot. Defaults to 0.
 * **sorted** (bool, optional):  Whether the given indices and times are already sorted. Set to ``True`` if your events are already sorted (first by spike time, then by index), this can save significant time at construction if your arrays contain large numbers of spikes. Defaults to ``False``.
+* **name** (str, optional): A unique name for the object, otherwise will use `loihi_spikegeneratorgroup_0'`, etc.
 
 ## Example
 
-Follows soon
+More examples and further details are provided in another repository, which will be avialbale soon.
+
+### Single neuron
+
+```
+import matplotlib.pyplot as plt
+from brian2_loihi import *
+
+# Define a single neuron
+loihi_group = LoihiNeuronGroup(
+    1,
+    refractory=2,
+    threshold_v_mant=400,
+    decay_v=1024,
+    decay_I=1024
+)
+
+# Excitatory input spikes
+ex_neuron_indices = [0, 0, 0, 0]
+ex_spike_times = [12, 14, 40, 80]
+
+# Inhibitory input spikes
+in_neuron_indices = [0, 0, 0]
+in_spike_times = [50, 60, 90]
+
+# Define spike generators
+generator_ex = LoihiSpikeGeneratorGroup(1, ex_neuron_indices, ex_spike_times)
+generator_in = LoihiSpikeGeneratorGroup(1, in_neuron_indices, in_spike_times)
+
+# Connect excitatory generator with neuron
+syn_ex = LoihiSynapses(generator_ex, loihi_group)
+syn_ex.connect()
+syn_ex.w = 124
+
+# Connect inhibitory generator with neuron
+syn_in = LoihiSynapses(generator_in, loihi_group)
+syn_in.connect()
+syn_in.w = 124
+
+# Probe synaptic input using a state monitor
+mon_I = LoihiStateMonitor(loihi_group, 'I')
+# Probe voltage using a state monitor
+mon_v = LoihiStateMonitor(loihi_group, 'v')
+
+# NOTE: It is important to use the LoihiNetwork,
+#       using Brian's magic network is not provided
+net = LoihiNetwork(
+    loihi_group,
+    generator_in,
+    generator_ex,
+    syn_ex,
+    syn_in,
+    mon_I,
+    mon_v
+)
+
+# Run the simulation
+net.run(100, report='text')
+
+# Plot synaptic input (current)
+plt.plot(mon_I.I[0])
+plt.title('Synaptic input / Current')
+pl = plt.show()
+
+# Plot voltage
+plt.plot(mon_v.v[0])
+plt.title('Voltage')
+pl = plt.show()
+```
+
+## Reference
+
+Coming soon.

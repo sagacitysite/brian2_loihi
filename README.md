@@ -100,7 +100,11 @@ Extends the `SpikeGeneratorGroup` class from *Brian2* and supports the following
 
 ## Example
 
-More examples and further details are provided in another repository, which will be avialbale soon.
+More examples and further details are provided in this repository:
+
+https://github.com/sagacitysite/brian2_loihi_utils
+
+Here we just provide a simple example.
 
 ### Single neuron
 
@@ -170,6 +174,20 @@ plt.title('Voltage')
 pl = plt.show()
 ```
 
-## Reference
+## References
 
-Coming soon.
+### Emulator
+
+The emulator is described in
+
+... coming soon ...
+
+### Loihi
+
+The Loihi chip was developed by Intel and is introduced in
+
+[M. Davies et al., "Loihi: A Neuromorphic Manycore Processor with On-Chip Learning," in IEEE Micro, vol. 38, no. 1, pp. 82-99, January/February 2018, doi: 10.1109/MM.2018.112130359.](https://doi.org/10.1109/MM.2018.112130359)
+
+Some further details are given in
+
+[C. Lin et al., "Programming Spiking Neural Networks on Intel’s Loihi," in Computer, vol. 51, no. 3, pp. 52-61, March 2018, doi: 10.1109/MC.2018.157113521.](https://doi.org/10.1109/MC.2018.157113521)

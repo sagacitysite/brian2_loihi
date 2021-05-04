@@ -303,39 +303,33 @@ class LoihiSynapses(Synapses):
         on = ''
 
         if (imp and tau):
-            p = { 'v': name, 'imp': imp, 'tau': tau }
+            p = { 'x': name, 'imp': imp, 'tau': tau }
 
             # Check if impulse value is in a range of 0...127 and integer
             check_range_and_int(imp, 'imp_'+name, low=0, high=127)
             # Check if tau value is in a range of 0...127 and integer
             check_lower_and_int(tau, 'tau_'+name, low=0)
-            
-            # backup
-            #model = '''
-            #    {v}_new = {v} * exp(-1.0/{tau}) : 1
-            #    {v}_int = int({v}_new) : 1
-            #    {v}_frac = {v}_new - {v}_int : 1
-            #    {v}_add_or_not = int({v}_frac > rand()) : 1 (constant over dt)
-            #    {v}_rnd = {v}_int + {v}_add_or_not : 1
-            #    d{v}/dt = {v}_rnd / ms : 1 (clock-driven)
-            #'''.format(**p)
-            
-            
-            # {v}_new = {v} * exp(-1.0/{tau}) : 1
-            # x = 1.0/{tau}
-            # {v}_new = {v} * (1-​x+​x^​2/​2!-​x^​3/​3!) : 1
-            # third order
-            # {v}_new = {v} * exp(-1.0/{tau}): 1
+
             model = '''
-                {v}_new = {v} * (1 - (1.0/{tau}) + (1.0/{tau})**2 / 2 - (1.0/{tau})**3 / 6) : 1
-                {v}_int = int({v}_new) : 1
-                {v}_frac = {v}_new - {v}_int : 1
-                {v}_add_or_not = int({v}_new!={v}_int and 0.5 > rand()) : 1 (constant over dt)
-                {v}_rnd = {v}_int + {v}_add_or_not : 1
-                d{v}/dt = {v}_rnd / ms : 1 (clock-driven)
+                {x}_new = {x} * (1 - exp(1.0/{tau})) : 1
+                {x}_int = int({x}_new) : 1
+                {x}_frac = {x}_new - {x}_int : 1
+                {x}_add_or_not = int({x}_frac > rand()) : 1 (constant over dt)
+                {x}_rnd = {x}_int + {x}_add_or_not : 1
+                d{x}/dt = {x}_rnd / ms : 1 (clock-driven)
             '''.format(**p)
 
-            on = '''{v} = int(clip({v} + {imp}, 0, 127))\n'''.format(**p)
+            # third order coefficients
+            #model = '''
+            #    {x}_new = {x} * (1 - (1.0/{tau}) + (1.0/{tau})**2 / 2 - (1.0/{tau})**3 / 6) : 1
+            #    {x}_int = int({x}_new) : 1
+            #    {x}_frac = {v}_new - {x}_int : 1
+            #    {x}_add_or_not = int({x}_new!={x}_int and 0.5 > rand()) : 1 (constant over dt)
+            #    {x}_rnd = {x}_int + {x}_add_or_not : 1
+            #    d{x}/dt = {x}_rnd / ms : 1 (clock-driven)
+            #'''.format(**p)
+
+            on = '''{x} = int(clip({x} + {imp}, 0, 127))\n'''.format(**p)
 
         # Remove preceding spaces and tabs from model and return model and on as tuple
         return re.sub('(?<=\\n)[ \t]*', '', model), on

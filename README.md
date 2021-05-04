@@ -10,6 +10,17 @@ Further details are explained in a paper coming soon.
 pip install brian2-loihi
 ```
 
+### Requirements and dependencies
+
+**Python 3** is required.
+
+Dependencies are automatically installed by the pip package manager.
+
+If the source code is used directly, the following packages need to be installed:
+
+* [Brian2](https://brian2.readthedocs.io/en/stable/)
+* [Numpy](https://numpy.org/)
+
 ## Usage
 
 Five *Brian2* classes are extended. Available parameters are reported below. Further down you find example code.

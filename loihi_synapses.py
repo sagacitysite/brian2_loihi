@@ -153,25 +153,25 @@ class LoihiSynapses(Synapses):
             Defines the precision of the weight, default is 8 bits.
             `num_weight_bits` is in a range between 0 and 8.
         imp_x1: int, optional
-            The impulse of the first synaptic pre trace x1.
+            The impulse of the first synaptic pre trace x1. The impulse is between 0 and 127.
         tau_x1: int, optional
-            The time constant of the first synaptic pre trace x1.
+            The time constant of the first synaptic pre trace x1. Tau has to be greater or equal to 0.
         imp_x2: int, optional
-            The impulse of the first synaptic pre trace x2.
+            The impulse of the first synaptic pre trace x2. The impulse is between 0 and 127.
         tau_x2: int, optional
-            The time constant of the first synaptic pre trace x2.
+            The time constant of the first synaptic pre trace x2. Tau has to be greater or equal to 0.
         imp_y1: int, optional
-            The impulse of the first synaptic post trace y1.
+            The impulse of the first synaptic post trace y1. The impulse is between 0 and 127.
         tau_y1: int, optional
-            The time constant of the first synaptic pre trace y1.
+            The time constant of the first synaptic pre trace y1. Tau has to be greater or equal to 0.
         imp_y2: int, optional
-            The impulse of the first synaptic post trace y2.
+            The impulse of the first synaptic post trace y2. The impulse is between 0 and 127.
         tau_y2: int, optional
-            The time constant of the first synaptic pre trace y2.
+            The time constant of the first synaptic pre trace y2. Tau has to be greater or equal to 0.
         imp_y3: int, optional
-            The impulse of the first synaptic post trace y3.
+            The impulse of the first synaptic post trace y3. The impulse is between 0 and 127.
         tau_y3: int, optional
-            The time constant of the first synaptic pre trace y3.
+            The time constant of the first synaptic pre trace y3. Tau has to be greater or equal to 0.
         name : str, optional
             The name for this object. If none is given, a unique name of the form
             ``loihi_synapses``, ``loihi_synapses_1``, etc. will be automatically chosen.
@@ -311,10 +311,10 @@ class LoihiSynapses(Synapses):
             check_lower_and_int(tau, 'tau_'+name, low=0)
 
             model = '''
-                {x}_new = {x} * (1 - exp(1.0/{tau})) : 1
+                {x}_new = {x} * (1 - (1.0/{tau})) : 1
                 {x}_int = int({x}_new) : 1
                 {x}_frac = {x}_new - {x}_int : 1
-                {x}_add_or_not = int({x}_frac > rand()) : 1 (constant over dt)
+                {x}_add_or_not = int({x}_new != {x}_int and {x}_frac > rand()) : 1 (constant over dt)
                 {x}_rnd = {x}_int + {x}_add_or_not : 1
                 d{x}/dt = {x}_rnd / ms : 1 (clock-driven)
             '''.format(**p)
@@ -323,7 +323,7 @@ class LoihiSynapses(Synapses):
             #model = '''
             #    {x}_new = {x} * (1 - (1.0/{tau}) + (1.0/{tau})**2 / 2 - (1.0/{tau})**3 / 6) : 1
             #    {x}_int = int({x}_new) : 1
-            #    {x}_frac = {v}_new - {x}_int : 1
+            #    {x}_frac = {x}_new - {x}_int : 1
             #    {x}_add_or_not = int({x}_new!={x}_int and 0.5 > rand()) : 1 (constant over dt)
             #    {x}_rnd = {x}_int + {x}_add_or_not : 1
             #    d{x}/dt = {x}_rnd / ms : 1 (clock-driven)

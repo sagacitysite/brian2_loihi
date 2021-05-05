@@ -65,16 +65,16 @@ Extends the `Synapses` class from *Brian2* and supports the following parameters
 * **w_exp** (int, optional): Weight exponent which scales the weights by 2^(6 + w_exp). The weight exponent can be between -8 and 7.
 * **sign_mode** (int, optional): Defines if the synapses are mixed (1), excitatory (2) or inhibitory (3). Excitatory synapses are default. `synapse_sign_mode` can be used for defining the sign mode.
 * **num_weight_bits** (int, optional): Defines the precision of the weight, default is 8 bits. `num_weight_bits` is in a range between 0 and 8.
-* **imp_x1** (int, optional): The impulse of the first synaptic pre trace x1.
-* **tau_x1** (int, optional): The time constant of the first synaptic pre trace x1.
-* **imp_x2** (int, optional): The impulse of the first synaptic pre trace x2.
-* **tau_x2** (int, optional): The time constant of the first synaptic pre trace x2.
-* **imp_y1** (int, optional): The impulse of the first synaptic post trace y1.
-* **tau_y1** (int, optional): The time constant of the first synaptic pre trace y1.
-* **imp_y2** (int, optional): The impulse of the first synaptic post trace y2.
-* **tau_y2** (int, optional): The time constant of the first synaptic pre trace y2.
-* **imp_y3** (int, optional): The impulse of the first synaptic post trace y3.
-* **tau_y3** (int, optional): The time constant of the first synaptic pre trace y3.
+* **imp_x1** (int, optional): The impulse of the first synaptic pre trace x1. The impulse is between 0 and 127.
+* **tau_x1** (int, optional): The time constant of the first synaptic pre trace x1. Tau has to be greater or equal to 0.
+* **imp_x2** (int, optional): The impulse of the first synaptic pre trace x2. The impulse is between 0 and 127.
+* **tau_x2** (int, optional): The time constant of the first synaptic pre trace x2. Tau has to be greater or equal to 0.
+* **imp_y1** (int, optional): The impulse of the first synaptic post trace y1. The impulse is between 0 and 127.
+* **tau_y1** (int, optional): The time constant of the first synaptic pre trace y1. Tau has to be greater or equal to 0.
+* **imp_y2** (int, optional): The impulse of the first synaptic post trace y2. The impulse is between 0 and 127.
+* **tau_y2** (int, optional): The time constant of the first synaptic pre trace y2. Tau has to be greater or equal to 0.
+* **imp_y3** (int, optional): The impulse of the first synaptic post trace y3. The impulse is between 0 and 127.
+* **tau_y3** (int, optional): The time constant of the first synaptic pre trace y3. Tau has to be greater or equal to 0.
 * **name** (str, optional):  The name for this object. If none is given, a unique name of the form. `loihi_synapses`, `loihi_synapses_1`, etc. will be automatically chosen.
 
 ### LoihiStateMonitor

@@ -59,9 +59,6 @@ class LoihiNetwork(Network):
         # Reorder schedule to match Loihi
         self.schedule = ['start', 'synapses', 'groups', 'thresholds',  'resets', 'end']
 
-        # set the codegeneration target
-        #self.
-
     def run(self, duration, **kwargs):
         """ Checks for problems and runs the Brian network simulation
 

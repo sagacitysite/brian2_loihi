@@ -12,13 +12,13 @@ pip install brian2-loihi
 
 ### Requirements and dependencies
 
-**Python 3** is required.
+**Python 3.6** or higher is required.
 
 Dependencies are automatically installed by the pip package manager.
 
 If the source code is used directly, the following packages need to be installed:
 
-* [Brian2](https://brian2.readthedocs.io/en/stable/)
+* [Brian2 (2.4.2 or higher)](https://brian2.readthedocs.io/en/stable/)
 * [Numpy](https://numpy.org/)
 
 ## Usage

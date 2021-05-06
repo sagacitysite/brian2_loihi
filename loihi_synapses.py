@@ -314,7 +314,7 @@ class LoihiSynapses(Synapses):
                 {x}_new = {x} * (1 - (1.0/{tau})) : 1
                 {x}_int = int({x}_new) : 1
                 {x}_frac = {x}_new - {x}_int : 1
-                {x}_add_or_not = int({x}_new != {x}_int and {x}_frac > rand()) : 1 (constant over dt)
+                {x}_add_or_not = int({x}_frac > rand()) : 1 (constant over dt)
                 {x}_rnd = {x}_int + {x}_add_or_not : 1
                 d{x}/dt = {x}_rnd / ms : 1 (clock-driven)
             '''.format(**p)

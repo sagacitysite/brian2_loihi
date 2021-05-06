@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.sage-chat
 
 # Build process
 *.egg-info

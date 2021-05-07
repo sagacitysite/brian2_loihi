@@ -145,14 +145,14 @@ generator_ex = LoihiSpikeGeneratorGroup(1, ex_neuron_indices, ex_spike_times)
 generator_in = LoihiSpikeGeneratorGroup(1, in_neuron_indices, in_spike_times)
 
 # Connect excitatory generator with neuron
-syn_ex = LoihiSynapses(generator_ex, loihi_group)
+syn_ex = LoihiSynapses(generator_ex, loihi_group, sign_mode=synapse_sign_mode.EXCITATORY)
 syn_ex.connect()
 syn_ex.w = 124
 
 # Connect inhibitory generator with neuron
-syn_in = LoihiSynapses(generator_in, loihi_group)
+syn_in = LoihiSynapses(generator_in, loihi_group, sign_mode=synapse_sign_mode.INHIBITORY)
 syn_in.connect()
-syn_in.w = 124
+syn_in.w = -124
 
 # Probe synaptic input using a state monitor
 mon_I = LoihiStateMonitor(loihi_group, 'I')

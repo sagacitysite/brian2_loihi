@@ -73,8 +73,8 @@ class LoihiNeuronGroup(NeuronGroup):
 
         # Neuron model
         equations_LIF = '''
-            rnd_v = sign(v)*ceil(abs(v*{1_tau_v})) : 1
-            rnd_I = sign(I)*ceil(abs(I*{1_tau_I})) : 1
+            rnd_v = int(sign(v)*ceil(abs(v*{1_tau_v}))) : 1
+            rnd_I = int(sign(I)*ceil(abs(I*{1_tau_I}))) : 1
             dv/dt = -rnd_v/ms + I/ms: 1 (unless refractory)
             dI/dt = -rnd_I/ms: 1
         '''.format(**p)
@@ -98,6 +98,7 @@ class LoihiNeuronGroup(NeuronGroup):
         """Creates a user friendly overview over all parameters
 
         This function makes it easy to get a transparent overview over all neuron group parameters.
+        Call: print(LoihiNeuronGroup.__str__())
         """
         print_string = 'Parameters of the neuron group:\n\n'
         for key, value in self.loihi_parameters.items():

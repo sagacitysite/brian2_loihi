@@ -19,8 +19,8 @@ class LoihiSynapses(Synapses):
         Initializes the LoihiSynapses and the Synapses
     __str__()
         Prints object
-    __getNumWeightBits()
-        Gets number of weight bits, which defined by the user (or default value)
+    __getWeightPrecision()
+        Gets precision of weights, which defined by the user via numWeightBits (or default value)
     __getWeightLimit()
         Gets the weight limit, which is a constant value
     __defineTraceEquation(name, imp, tau)
@@ -262,14 +262,17 @@ class LoihiSynapses(Synapses):
 
         return print_string
 
-    def __getNumWeightBits(self):
+    def __getWeightPrecision(self):
         # Check if sign mode is mixed
         is_mixed = 1 if (self.sign_mode == synapse_sign_mode.MIXED) else 0
 
         # Define number of available bits
-        num_weight_bits = 8 - (self.num_weight_bits - is_mixed)
+        num_lsb_bits = 8 - (self.num_weight_bits - is_mixed)
 
-        return num_weight_bits
+        # Calculate precision
+        precision = 2**num_lsb_bits
+
+        return precision
 
     def __getWeightLimit(self):
         # Define weight limit: 21 bits with last 6 bits zeros
@@ -433,7 +436,7 @@ class LoihiSynapses(Synapses):
         # Define variables for equation
         p = {
             'dw': dw,
-            'nb': self.__getNumWeightBits(),
+            'precision': self.__getWeightPrecision(),
             'is_mixed': int(self.sign_mode == synapse_sign_mode.MIXED),
             'w_exp': self.w_exp,
             'limit': self.__getWeightLimit(),
@@ -441,9 +444,6 @@ class LoihiSynapses(Synapses):
             'w_high': w_high
         }
 
-        #add_or_not = int(abs(w_updated/2 - int(w_updated/2)) >= 0.5) : 1
-
-        # Build learning rule equations
         learning_equations = '''
             u0 = 1 : 1
             u1 = int(t/ms % 2**1 == 0) : 1
@@ -456,10 +456,14 @@ class LoihiSynapses(Synapses):
             u8 = int(t/ms % 2**8 == 0) : 1
             u9 = int(t/ms % 2**9 == 0) : 1
 
-            w_updated = w + {dw} : 1
-            add_or_not = sign(w_updated)*{is_mixed}*(rand() > 0.5) : 1 (constant over dt)
-            w_shifted = int((w_updated + add_or_not) / 2**{nb}) * 2**{nb} : 1
-            w_clipped = clip(w_shifted, {w_low}, {w_high}) : 1
+            dw_rounded = int(sign({dw})*ceil(abs({dw}))) : 1
+            quotient = int(dw_rounded / {precision}) : 1
+            remainder = abs(dw_rounded) % {precision} : 1
+            prob = remainder / {precision} : 1
+            add_or_not = sign(dw_rounded) * int(prob > rand()) : 1 (constant over dt)
+            dw_rounded_to_precision = (quotient + add_or_not) * {precision} : 1
+            w_updated = w + dw_rounded_to_precision : 1
+            w_clipped = clip(w_updated, {w_low}, {w_high}) : 1
             dw/dt = w_clipped / ms : 1 (clock-driven)
 
             w_act_scaled = w_clipped * 2**(6 + {w_exp}) : 1
@@ -475,7 +479,8 @@ class LoihiSynapses(Synapses):
         learning_equations = learning_equations.replace('^', '**')
 
         # Remove preceding spaces and tabs and return
-        return re.sub('(?<=\\n)[ \t]*', '', learning_equations)
+        r = re.sub('(?<=\\n)[ \t]*', '', learning_equations)
+        return r
 
     def __buildNoLearningRule(self):
         """
@@ -489,14 +494,15 @@ class LoihiSynapses(Synapses):
 
         # Define variables for equation
         p = {
-            'nb': self.__getNumWeightBits(),
+            'precision': self.__getWeightPrecision(),
             'w_exp': self.w_exp,
             'limit': self.__getWeightLimit()
         }
 
+        # why compute this at each step? !!!!
         weight_equations = '''
             w : 1
-            w_shifted = int(w / 2**{nb}) * 2**{nb} : 1
+            w_shifted = int(w / {precision}) * {precision} : 1
             w_scaled = w_shifted * 2**(6 + {w_exp}) : 1
             w_scaled_shifted = int(floor(w_scaled / 2**6)) * 2**6 : 1
             w_clipped = clip(w_scaled_shifted, -{limit}, {limit}) : 1
@@ -511,10 +517,10 @@ class LoihiSynapses(Synapses):
         #weights = self.w
 
         # Define number of available bits
-        num_bits = self.__getNumWeightBits()
+        precision = self.__getWeightPrecision()
 
         # Shift weight by number of availbale bits
-        w_shifted = (weights / 2**num_bits).astype(int) * 2**num_bits
+        w_shifted = (weights / precision).astype(int) * precision
 
         # Scale weight with weight exponent
         w_scaled = w_shifted * 2**(6.0 + self.w_exp)

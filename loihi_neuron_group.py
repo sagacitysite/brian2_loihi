@@ -64,8 +64,8 @@ class LoihiNeuronGroup(NeuronGroup):
             **p,
             'decay_v': decay_v,
             'decay_I': decay_I,
-            'tau_v': 2**12/decay_v,
-            'tau_I': 2**12/decay_I,
+            'tau_v': 2**12/decay_v if decay_v != 0 else 'inf',
+            'tau_I': 2**12/decay_I if decay_I != 0 else 'inf',
             'refractory': refractory,
             'threshold_v_mant': threshold_v_mant,
             'reset_v': 0
@@ -100,6 +100,7 @@ class LoihiNeuronGroup(NeuronGroup):
         This function makes it easy to get a transparent overview over all neuron group parameters.
         Call: print(LoihiNeuronGroup.__str__())
         """
+
         print_string = 'Parameters of the neuron group:\n\n'
         for key, value in self.loihi_parameters.items():
             print_string += '{:18} {:}\n'.format(key, value)

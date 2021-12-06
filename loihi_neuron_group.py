@@ -16,7 +16,7 @@ class LoihiNeuronGroup(NeuronGroup):
         Initializes the LoihiNeuronGroup and the NeuronGroup
     """
 
-    def __init__(self, N, refractory=1, threshold_v_mant=100, decay_v=0, decay_I=4096, name='loihi_neurongroup*'):
+    def __init__(self, N, refractory=1, threshold_v_mant=100, decay_v=0, decay_I=4096, name='loihi_neurongroup*', eqn_str=''):
         """ Initializes the LoihiStateMonitor and the StateMonitor
 
         The init method checks if the given parameters are valid. Afterwards the
@@ -39,6 +39,8 @@ class LoihiNeuronGroup(NeuronGroup):
             The current decay (note that tau_I = 4096/decay_I)
         name : str, optional
             A unique name for the group, otherwise use ``loihi_neurongroup_0``, etc.
+        eqn_str : str, optional
+            A str to be added to the neuron model equations, e.g. to define additional variables
         """
 
         # Check if tau values are in a range of 0...4096 and integer
@@ -79,6 +81,9 @@ class LoihiNeuronGroup(NeuronGroup):
             dI/dt = -rnd_I/ms: 1
         '''.format(**p)
 
+        # Add equation string
+        equations_LIF += eqn_str
+        
         # Create Brian neuron group
 
         super().__init__(
